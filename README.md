@@ -66,7 +66,7 @@ This repository provides the model, multi-granularity data construction tools, t
 
 | Dataset | Model | Download |
 | --- | --- | --- |
-| MSRS | ControlFuse v0.5.5 | [Baidu Netdisk](https://pan.baidu.com/s/1gO1pnY19BiKmclZO05PtOQ?pwd=m6tf) (access code: `m6tf`) |
+| MSRS | ControlFuse | [Baidu Netdisk](https://pan.baidu.com/s/1gO1pnY19BiKmclZO05PtOQ?pwd=m6tf) (access code: `m6tf`) |
 
 ## Quantitative Results
 
