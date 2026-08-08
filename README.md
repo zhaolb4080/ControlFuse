@@ -24,7 +24,7 @@
 
 ControlFuse is an instruction-guided infrared-visible image fusion framework that supports **global**, **semantic**, and **instance-level** control in a single model. Given the same registered infrared-visible pair, natural-language instructions determine which content should be emphasized and where the enhancement should occur.
 
-This repository provides the model, multi-granularity data construction tools, training and inference pipelines, fusion-quality metrics, control-localization evaluation, and model profiling utilities.
+This repository provides the model, multi-granularity data construction tools, training and inference pipelines, fusion-quality metrics, and control-localization evaluation.
 
 <p align="center">
   <img src="assets/teaser.png" alt="Comparison of controllable infrared-visible image fusion paradigms" width="95%">
@@ -44,7 +44,7 @@ This repository provides the model, multi-granularity data construction tools, t
 - **Unified multimodal interaction.** FMC projects visual and textual representations into a shared manifold space.
 - **Fine-grained spatial alignment.** CGI uses curvature-aware interaction to connect instructions with spatial visual evidence.
 - **Control-aware optimization.** Localization, boundary, same-class distractor, content-fidelity, and text-alignment objectives are jointly optimized.
-- **Complete experiment pipeline.** The release covers data construction, training, inference, six fusion metrics, localization evaluation, tests, and parameter/FLOP profiling.
+- **Complete experiment pipeline.** The release covers data construction, training, inference, six fusion metrics, localization evaluation, and tests.
 
 ## Control Granularities
 
