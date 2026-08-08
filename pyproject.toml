@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "controlfuse"
+version = "0.5.5"
+description = "Official PyTorch implementation of ControlFuse (AAAI 2026)"
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.1",
+  "transformers>=4.40",
+  "safetensors>=0.4.3",
+  "numpy>=1.24,<2",
+  "Pillow>=10.0",
+  "PyYAML>=6.0",
+  "scipy>=1.10",
+]
+
+[tool.setuptools.packages.find]
+include = ["controlfuse*"]

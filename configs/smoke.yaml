@@ -1,0 +1,9 @@
+seed: 1
+device: cpu
+training_schema: controlfuse-v5
+data: {train_manifest: data/smoke.jsonl, val_manifest: data/smoke.jsonl, image_size: 32, positive_crop_probability: 0.8, local_crop_sizes: [16, 24, 32], local_crop_probabilities: [0.4, 0.4, 0.2], semantic_full_scene_probability: 0.15, instance_full_scene_probability: 0.30, workers: 0}
+text: {backend: hash, dim: 32, max_length: 12}
+model: {dim: 8, manifold_dim: 8, heads: 2, encoder_blocks: 1, fmc_layers: 1, fmc_grid: 4, decoder_blocks: 2, out_channels: 3}
+loss: {curvature_weight: 0.2, contrastive_temperature: 0.07, alignment_margin: 0.1, focal_weight: 1.0, focal_gamma: 2.0, maximum_positive_weight: 10.0, tversky_weight: 1.0, tversky_alpha: 0.55, tversky_beta: 0.45, boundary_weight: 0.2, distractor_weight: 0.1, false_positive_weight: 0.05, distractor_alignment_weight: 0.5, empty_negative_weight: 0.15, global_localization_weight: 0.25, localization_floor_weight: 0.5, intensity_weight: 10.0, gradient_weight: 10.0, ssim_weight: 1.0, color_weight: 1.0, uncertainty_log_var_min: -3.0, uncertainty_log_var_max: 3.0}
+train: {epochs: 1, batch_size: 2, learning_rate: 1.0e-4, weight_decay: 0, lr_step: 20, lr_gamma: 0.5, amp: false, output_dir: runs/smoke, save_every: 1, sampling: {balanced: true, granularity_weights: {global: 0.35, semantic: 1.0, instance: 1.2}, class_balance_power: 0.75, size_balance_power: 0.25, maximum_size_weight: 4.0}}
+validation: {semantic_threshold: 0.50, instance_threshold: 0.50}

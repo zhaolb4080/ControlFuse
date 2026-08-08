@@ -1,0 +1,77 @@
+seed: 42
+device: cuda
+training_schema: controlfuse-v5
+
+data:
+  train_manifest: data/train.jsonl
+  val_manifest: data/val.jsonl
+  image_size: 256
+  positive_crop_probability: 0.8
+  local_crop_sizes: [128, 192, 256]
+  local_crop_probabilities: [0.4, 0.4, 0.2]
+  semantic_full_scene_probability: 0.15
+  instance_full_scene_probability: 0.30
+  workers: 8
+
+text:
+  backend: clip
+  model_name: openai/clip-vit-base-patch32
+  max_length: 77
+
+model:
+  dim: 48
+  manifold_dim: 64
+  heads: 4
+  encoder_blocks: 3
+  fmc_layers: 2
+  fmc_grid: 16
+  decoder_blocks: 5
+  out_channels: 3
+
+loss:
+  curvature_weight: 0.2
+  contrastive_temperature: 0.07
+  alignment_margin: 0.1
+  focal_weight: 1.0
+  focal_gamma: 2.0
+  maximum_positive_weight: 10.0
+  tversky_weight: 1.0
+  tversky_alpha: 0.55
+  tversky_beta: 0.45
+  boundary_weight: 0.20
+  distractor_weight: 0.10
+  false_positive_weight: 0.05
+  distractor_alignment_weight: 0.50
+  empty_negative_weight: 0.15
+  global_localization_weight: 0.25
+  localization_floor_weight: 0.5
+  intensity_weight: 10.0
+  gradient_weight: 10.0
+  ssim_weight: 1.0
+  color_weight: 1.0
+  uncertainty_log_var_min: -3.0
+  uncertainty_log_var_max: 3.0
+
+train:
+  epochs: 100
+  batch_size: 8
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  lr_step: 20
+  lr_gamma: 0.5
+  amp: true
+  output_dir: runs/controlfuse_v5
+  save_every: 10
+  sampling:
+    balanced: true
+    granularity_weights:
+      global: 0.35
+      semantic: 1.0
+      instance: 1.2
+    class_balance_power: 0.75
+    size_balance_power: 0.25
+    maximum_size_weight: 4.0
+
+validation:
+  semantic_threshold: 0.50
+  instance_threshold: 0.50
