@@ -12,6 +12,7 @@
 ![Version](https://img.shields.io/badge/version-0.5.5-2F80ED.svg)
 
 [Paper](https://ojs.aaai.org/index.php/AAAI/article/view/38321) ·
+[Model Zoo](#model-zoo) ·
 [Installation](#installation) ·
 [Data Preparation](#data-preparation) ·
 [Training](#training) ·
@@ -60,6 +61,12 @@ This repository provides the model, multi-granularity data construction tools, t
 | MSRS | ✓ | ✓ | ✓ |
 | M3FD | ✓ | ✓ | ✓ |
 | RoadScene | Aligned-pair manifest | Generic configuration | Fusion metrics |
+
+## Model Zoo
+
+| Dataset | Model | Download |
+| --- | --- | --- |
+| MSRS | ControlFuse v0.5.5 | [Baidu Netdisk](https://pan.baidu.com/s/1gO1pnY19BiKmclZO05PtOQ?pwd=m6tf) (access code: `m6tf`) |
 
 ## Quantitative Results
 
