@@ -25,16 +25,17 @@ ControlFuse is an instruction-guided infrared-visible image fusion framework tha
 
 This repository provides the model, multi-granularity data construction tools, training and inference pipelines, fusion-quality metrics, control-localization evaluation, and model profiling utilities.
 
-~~~mermaid
-flowchart TD
-    A["Infrared + visible images"] --> B["Dual image encoders"]
-    C["Text instruction"] --> D["Frozen text encoder"]
-    B --> E["Feature Manifold Converter (FMC)"]
-    D --> E
-    E --> F["Curvature-Guided Interaction (CGI)"]
-    F --> G["Multi-scale decoder → fused image"]
-    F --> H["Instruction-conditioned location map"]
-~~~
+<p align="center">
+  <img src="assets/teaser.png" alt="Comparison of controllable infrared-visible image fusion paradigms" width="95%">
+</p>
+<p align="center"><em>Comparison of controllable IVIF fusion paradigms given the same VIS-IR inputs.</em></p>
+
+## Framework
+
+<p align="center">
+  <img src="assets/framework.png" alt="Overview of the ControlFuse framework" width="100%">
+</p>
+<p align="center"><em>Overview of the proposed multi-granularity controllable fusion framework.</em></p>
 
 ## Highlights
 
@@ -60,8 +61,6 @@ flowchart TD
 | M3FD | ✓ | ✓ | ✓ |
 | RoadScene | Aligned-pair manifest | Generic configuration | Fusion metrics |
 
-The current release is **v0.5.5**. MSRS training and testing are complete. The M3FD pipeline uses a fixed 3,780/420 split and keeps its checkpoints isolated from MSRS to ensure dataset-specific training from random initialization.
-
 ## Quantitative Results
 
 Global-instruction results reported in the paper:
@@ -71,8 +70,6 @@ Global-instruction results reported in the paper:
 | MSRS | 5.99 | 61.15 | 11.94 | 4.15 | 1.07 | 0.76 |
 | RoadScene | 5.19 | 55.96 | 13.06 | 5.05 | 0.85 | 0.59 |
 | M3FD | 6.26 | 68.05 | 16.60 | 6.82 | 0.92 | 0.81 |
-
-Metric implementations can differ across image-fusion repositories. Use `evaluate.py` consistently for all compared methods.
 
 ## Installation
 
@@ -99,8 +96,6 @@ PyTorch 2.1–2.3 Windows wheels use the NumPy 1.x ABI. If the environment alrea
 pip uninstall -y numpy
 pip install --no-cache-dir "numpy>=1.24,<2"
 ~~~
-
-The default configuration downloads the frozen `openai/clip-vit-base-patch32` text encoder on first use. `configs/smoke.yaml` uses a lightweight hash encoder only for offline tests.
 
 ## Data Format
 
@@ -204,43 +199,6 @@ python tools/build_manifest.py \
   --granularity global
 ~~~
 
-Finally, validate the generated data:
-
-~~~bash
-python tools/check_v5_data.py --manifest data/m3fd_train.jsonl
-python tools/check_v5_data.py --manifest data/m3fd_test_control.jsonl
-~~~
-
-`--mask-mode box` is intended only for pipeline debugging. Formal experiments use SAM masks.
-
-</details>
-
-<details>
-<summary><b>Generic aligned folders and COCO annotations</b></summary>
-
-For aligned infrared-visible folders:
-
-~~~bash
-python tools/build_manifest.py \
-  --visible-dir /data/visible \
-  --infrared-dir /data/infrared \
-  --output data/train_global.jsonl
-~~~
-
-For COCO polygon annotations:
-
-~~~bash
-python tools/build_multigranularity_from_coco.py \
-  --coco /data/annotations/train.json \
-  --visible-dir /data/visible \
-  --infrared-dir /data/infrared \
-  --output data/train.jsonl
-~~~
-
-Always split by source-image identity rather than JSONL row so that repeated instruction rows from one infrared-visible pair cannot cross dataset partitions.
-
-</details>
-
 ## Training
 
 ### MSRS
@@ -249,8 +207,6 @@ Always split by source-image identity rather than JSONL row so that repeated ins
 python tools/check_v5_data.py --manifest data/msrs_train.jsonl
 python train.py --config configs/msrs.yaml
 ~~~
-
-`configs/msrs.yaml` uses all 1,083 training pairs, no test-set model selection, 100 epochs, AdamW, batch size 8, an initial learning rate of `1e-4`, and 0.5 learning-rate decay every 20 epochs. Checkpoints are saved under `runs/controlfuse_msrs_v5/`.
 
 Resume an interrupted finite run:
 
@@ -276,8 +232,6 @@ python train.py \
   --config configs/m3fd.yaml \
   --resume runs/controlfuse_m3fd_v5/last.pt
 ~~~
-
-The `controlfuse-v5-m3fd` schema rejects MSRS checkpoints passed to `--resume`, preventing unintended cross-dataset fine-tuning.
 
 ## Inference
 
@@ -341,26 +295,11 @@ python evaluate_localization.py \
 
 The localization evaluator reports IoU, F1, precision, and recall for semantic and instance instructions separately.
 
-### Model profiling
-
-~~~bash
-python tools/profile_model.py --config configs/controlfuse.yaml --size 256
-~~~
-
-## Tests
-
-~~~bash
-python tests/smoke_test.py
-python tests/data_test.py
-python tests/loss_behavior_test.py
-~~~
-
-The smoke configuration is CPU-only and does not download CLIP weights.
-
 ## Repository Structure
 
 ~~~text
 ControlFuse/
+├── assets/                   # README teaser and framework figures
 ├── controlfuse/              # Model, data loader, losses, metrics, checkpoints
 ├── configs/                  # Generic, MSRS, M3FD, and smoke-test configs
 ├── tools/                    # Dataset builders, validators, and profiling
@@ -390,7 +329,3 @@ If ControlFuse is useful in your research, please cite:
   year      = {2026}
 }
 ~~~
-
-## Acknowledgements
-
-This project uses components and ideas from [Restormer](https://github.com/swz30/Restormer), [CLIP](https://github.com/openai/CLIP), and [Segment Anything](https://github.com/facebookresearch/segment-anything). We thank their authors for making their work publicly available.
