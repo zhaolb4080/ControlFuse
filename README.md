@@ -68,16 +68,6 @@ This repository provides the model, multi-granularity data construction tools, t
 | --- | --- | --- |
 | MSRS | ControlFuse | [Baidu Netdisk](https://pan.baidu.com/s/1gO1pnY19BiKmclZO05PtOQ?pwd=m6tf) (access code: `m6tf`) |
 
-## Quantitative Results
-
-Global-instruction results reported in the paper:
-
-| Dataset | EN ↑ | SD ↑ | SF ↑ | AG ↑ | VIF ↑ | Qabf ↑ |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| MSRS | 5.99 | 61.15 | 11.94 | 4.15 | 1.07 | 0.76 |
-| RoadScene | 5.19 | 55.96 | 13.06 | 5.05 | 0.85 | 0.59 |
-| M3FD | 6.26 | 68.05 | 16.60 | 6.82 | 0.92 | 0.81 |
-
 ## Installation
 
 Python 3.10 or 3.11 is recommended.
