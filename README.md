@@ -27,7 +27,7 @@ ControlFuse is an instruction-guided infrared-visible image fusion framework tha
 This repository provides the model, multi-granularity data construction tools, training and inference pipelines, fusion-quality metrics, and control-localization evaluation.
 
 <p align="center">
-  <img src="assets/teaser.png" alt="Comparison of controllable infrared-visible image fusion paradigms" width="95%">
+  <img src="assets/teaser.png" alt="Comparison of controllable infrared-visible image fusion paradigms" width="70%">
 </p>
 <p align="center"><em>Comparison of controllable IVIF fusion paradigms given the same VIS-IR inputs.</em></p>
 
