@@ -103,8 +103,6 @@ Each JSONL row represents one image-pair/instruction/mask sample:
 {"name":"00001_instance_3","visible":"images/00001.png","infrared":"infrared/00001.png","mask":"masks/00001_instance_3.png","instruction":"Emphasize the leftmost pedestrian.","negative_instruction":"Emphasize an absent car on the right.","granularity":"instance"}
 ~~~
 
-The same registered image pair may appear in multiple rows with different instructions and masks. A global row may omit `mask`; the loader then creates an all-one mask.
-
 ## Data Preparation
 
 ### MSRS
