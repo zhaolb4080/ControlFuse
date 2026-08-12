@@ -60,7 +60,7 @@ This repository provides the model, multi-granularity data construction tools, t
 | --- | :---: | :---: | :---: |
 | MSRS | ✓ | ✓ | ✓ |
 | M3FD | ✓ | ✓ | ✓ |
-| RoadScene | Aligned-pair manifest | Generic configuration | Fusion metrics |
+| RoadScene | ✓ | ✓ | ✓ |
 
 ## Model Zoo
 
