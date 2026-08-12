@@ -300,12 +300,10 @@ python tools/check_v5_data.py --manifest data/roadscene_test_control.jsonl
 RoadScene has no annotations; Grounding DINO and SAM generate semantic/instance
 pseudo-labels. Global metrics use `roadscene_test_global.jsonl`, while control
 localization uses `roadscene_test_control.jsonl`.
+
 ## Training
 
-### MSRS
-
 ~~~bash
-python tools/check_v5_data.py --manifest data/msrs_train.jsonl
 python train.py --config configs/msrs.yaml
 ~~~
 
@@ -315,23 +313,6 @@ Resume an interrupted finite run:
 python train.py \
   --config configs/msrs.yaml \
   --resume runs/controlfuse_msrs_v5/last.pt
-~~~
-
-### M3FD
-
-Start M3FD from random initialization:
-
-~~~bash
-python tools/check_v5_data.py --manifest data/m3fd_train.jsonl
-python train.py --config configs/m3fd.yaml
-~~~
-
-Resume only an interrupted M3FD run:
-
-~~~bash
-python train.py \
-  --config configs/m3fd.yaml \
-  --resume runs/controlfuse_m3fd_v5/last.pt
 ~~~
 
 ## Inference
@@ -354,13 +335,11 @@ python infer.py \
 ~~~bash
 python infer_manifest.py \
   --config configs/msrs.yaml \
-  --checkpoint runs/controlfuse_msrs_v5/last.pt \
+  --checkpoint runs/controlfuse_msrs_v5/checkpoint.pt \
   --manifest data/msrs_test_global.jsonl \
   --output-dir results/msrs_global_v5 \
   --batch-size 4
 ~~~
-
-For controllability analysis, keep the infrared-visible pair fixed and vary only the instruction. Compare both the fused image and the predicted location map.
 
 ## Evaluation
 
@@ -409,11 +388,8 @@ ControlFuse/
 ├── infer.py                  # Single-pair inference
 ├── infer_manifest.py         # Batch inference
 ├── evaluate.py               # Six fusion-quality metrics
-├── evaluate_localization.py  # Semantic/instance localization metrics
-└── IMPLEMENTATION.md         # Module mapping and protocol details
+└──  evaluate_localization.py  # Semantic/instance localization metrics
 ~~~
-
-See [IMPLEMENTATION.md](IMPLEMENTATION.md) for the module-to-code mapping, released engineering details, and the complete evaluation protocol. Version history is available in [CHANGELOG.md](CHANGELOG.md).
 
 ## Citation
 
