@@ -68,6 +68,7 @@ This repository provides the model, multi-granularity data construction tools, t
 | --- | --- | --- |
 | MSRS | ControlFuse_MSRS | [Baidu Netdisk](https://pan.baidu.com/s/1gO1pnY19BiKmclZO05PtOQ?pwd=m6tf) |
 | M3FD | ControlFuse_M3FD | [Baidu Netdisk](https://pan.baidu.com/s/1dQBJBdteVa5EdZBAnfCpgQ?pwd=vs8x) |
+| RoadScene | ControlFuse_RoadScene | [Baidu Netdisk](https://pan.baidu.com/s/18php2c3WB1A9h9ZBCjlhow?pwd=uq2j |
 
 ## Installation
 
