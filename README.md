@@ -157,10 +157,6 @@ python tools/build_manifest.py \
   --granularity global
 ```
 
-```bash
-python tools/check_v5_data.py --manifest data/msrs_test_control.jsonl
-```
-
 `msrs_test_global.jsonl` is used for global fusion metrics and
 `msrs_test_control.jsonl` for semantic/instance localization. Instance masks
 are obtained from 8-connected components of the semantic labels.
@@ -197,10 +193,6 @@ python tools/build_m3fd_multigranularity.py \
   --max-instances 5
 ```
 
-```bash
-python tools/check_v5_data.py --manifest data/m3fd_train.jsonl
-```
-
 #### Test set
 
 ```bash
@@ -221,8 +213,6 @@ python tools/build_manifest.py \
   --instruction "Enhance the entire scene." \
   --negative-instruction "Suppress the entire scene." \
   --granularity global
-
-python tools/check_v5_data.py --manifest data/m3fd_test_control.jsonl
 ```
 
 M3FD XML boxes are converted into semantic and instance masks using SAM.
@@ -262,10 +252,6 @@ python tools/build_roadscene_multigranularity.py \
   --nms-iou 0.60 \
   --min-instance-area 64 \
   --max-instances 5
-```
-
-```bash
-python tools/check_v5_data.py --manifest data/roadscene_train.jsonl
 ```
 
 #### Test set
@@ -356,14 +342,6 @@ python evaluate.py \
 ### Semantic and instance localization
 
 ~~~bash
-python infer_manifest.py \
-  --config configs/msrs.yaml \
-  --checkpoint runs/controlfuse_msrs_v5/last.pt \
-  --manifest data/msrs_test_control.jsonl \
-  --output-dir results/msrs_control_v5 \
-  --batch-size 4 \
-  --save-masks
-
 python evaluate_localization.py \
   --manifest data/msrs_test_control.jsonl \
   --predicted-dir results/msrs_control_v5/masks \
@@ -371,8 +349,6 @@ python evaluate_localization.py \
   --summary results/msrs_localization_summary_v5.json \
   --threshold 0.5
 ~~~
-
-The localization evaluator reports IoU, F1, precision, and recall for semantic and instance instructions separately.
 
 ## Repository Structure
 
@@ -396,12 +372,12 @@ If ControlFuse is useful in your research, please cite:
 
 ~~~bibtex
 @inproceedings{zhao2026controlfuse,
-  title     = {ControlFuse: Instruction-guided Multi-Granularity Controllable Image Fusion},
-  author    = {Zhao, Libo and Zhang, Xiaoli and Wang, Zeyu},
-  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume    = {40},
-  number    = {16},
-  pages     = {13199--13207},
-  year      = {2026}
+  title={ControlFuse: Instruction-guided Multi-Granularity Controllable Image Fusion},
+  author={Zhao, Libo and Zhang, Xiaoli and Wang, Zeyu},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={40},
+  number={16},
+  pages={13199--13207},
+  year={2026}
 }
 ~~~
