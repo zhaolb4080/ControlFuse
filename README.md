@@ -103,6 +103,8 @@ Each JSONL row represents one image-pair/instruction/mask sample:
 {"name":"00001_instance_3","visible":"images/00001.png","infrared":"infrared/00001.png","mask":"masks/00001_instance_3.png","instruction":"Emphasize the leftmost pedestrian.","negative_instruction":"Emphasize an absent car on the right.","granularity":"instance"}
 ~~~
 
+## Data Preparation
+
 Run all commands from the repository root and replace the example dataset and
 checkpoint paths with local paths.
 
