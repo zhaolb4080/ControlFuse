@@ -317,28 +317,27 @@ python train.py \
 
 ## Inference
 
-### Single image pair
-
-~~~bash
-python infer.py \
-  --config configs/msrs.yaml \
-  --checkpoint runs/controlfuse_msrs_v5/last.pt \
-  --visible examples/visible.png \
-  --infrared examples/infrared.png \
-  --instruction "Highlight the leftmost pedestrian." \
-  --output results/fused.png \
-  --mask-output results/location.png
-~~~
-
-### Whole manifest
+### Global fusion test
 
 ~~~bash
 python infer_manifest.py \
   --config configs/msrs.yaml \
-  --checkpoint runs/controlfuse_msrs_v5/checkpoint.pt \
+  --checkpoint runs/controlfuse_msrs_v5/last.pt \
   --manifest data/msrs_test_global.jsonl \
   --output-dir results/msrs_global_v5 \
   --batch-size 4
+~~~
+
+### Semantic and instance control test
+
+~~~bash
+python infer_manifest.py \
+  --config configs/msrs.yaml \
+  --checkpoint runs/controlfuse_msrs_v5/last.pt \
+  --manifest data/msrs_test_control.jsonl \
+  --output-dir results/msrs_control_v5 \
+  --batch-size 4 \
+  --save-masks
 ~~~
 
 ## Evaluation
