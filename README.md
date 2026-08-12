@@ -103,23 +103,22 @@ Each JSONL row represents one image-pair/instruction/mask sample:
 {"name":"00001_instance_3","visible":"images/00001.png","infrared":"infrared/00001.png","mask":"masks/00001_instance_3.png","instruction":"Emphasize the leftmost pedestrian.","negative_instruction":"Emphasize an absent car on the right.","granularity":"instance"}
 ~~~
 
-## Data Preparation
+Run all commands from the repository root and replace the example dataset and
+checkpoint paths with local paths.
 
 ### MSRS
 
-For the official `train|test/{vi,ir,Segmentation_labels}` layout, generate semantic and connected-component pseudo-instance rows:
+Expected layout: `train|test/{vi,ir,Segmentation_labels}`.
 
-~~~bash
+#### Training set
+
+```bash
 python tools/build_msrs_multigranularity.py \
   --split-root D:/Datasets/MSRS/train \
   --output data/msrs_train_control.jsonl \
   --min-instance-area 20 \
   --max-instances 5
-~~~
 
-Create global rows from the aligned folders:
-
-~~~bash
 python tools/build_manifest.py \
   --visible-dir D:/Datasets/MSRS/train/vi \
   --infrared-dir D:/Datasets/MSRS/train/ir \
@@ -127,65 +126,91 @@ python tools/build_manifest.py \
   --instruction "Enhance the entire scene." \
   --negative-instruction "Suppress the entire scene." \
   --granularity global
-~~~
+```
 
-Combine the global and control rows into `data/msrs_train.jsonl`, then verify the formal v5 data:
+```bat
+copy /b data\msrs_train_global.jsonl+data\msrs_train_control.jsonl data\msrs_train.jsonl
+```
 
-~~~bash
+```bash
 python tools/check_v5_data.py --manifest data/msrs_train.jsonl
-~~~
+```
 
-MSRS instance masks are obtained from 8-connected components of indexed semantic labels. Touching same-class objects can be refined with SAM when more precise instance boundaries are required.
+#### Test set
 
-<details>
-<summary><b>M3FD preparation</b></summary>
+```bash
+python tools/build_msrs_multigranularity.py \
+  --split-root D:/Datasets/MSRS/test \
+  --output data/msrs_test_control.jsonl \
+  --min-instance-area 20 \
+  --max-instances 5
 
-M3FD uses `Ir/`, `Vis/`, and Pascal VOC `Annotation/*.xml` folders. Create the deterministic 3,780/420 split:
+python tools/build_manifest.py \
+  --visible-dir D:/Datasets/MSRS/test/vi \
+  --infrared-dir D:/Datasets/MSRS/test/ir \
+  --output data/msrs_test_global.jsonl \
+  --instruction "Enhance the entire scene." \
+  --negative-instruction "Suppress the entire scene." \
+  --granularity global
+```
 
-~~~bash
+```bash
+python tools/check_v5_data.py --manifest data/msrs_test_control.jsonl
+```
+
+`msrs_test_global.jsonl` is used for global fusion metrics and
+`msrs_test_control.jsonl` for semantic/instance localization. Instance masks
+are obtained from 8-connected components of the semantic labels.
+
+### M3FD
+
+Expected layout: `M3FD/{Ir,Vis,Annotation}`. Split the 4,200 aligned pairs into
+3,780 training pairs and 420 test pairs:
+
+```bash
 python tools/split_m3fd.py \
   --root D:/Datasets/M3FD \
   --train-count 3780 \
   --test-count 420 \
   --seed 2026
-~~~
+```
 
-Install Segment Anything and obtain an official SAM checkpoint:
-
-~~~bash
+```bash
 pip install git+https://github.com/facebookresearch/segment-anything.git
-~~~
+```
 
-Build the combined global/semantic/instance training manifest:
+#### Training set
 
-~~~bash
+```bash
 python tools/build_m3fd_multigranularity.py \
   --split-root D:/Datasets/M3FD/train \
   --output data/m3fd_train.jsonl \
   --sam-checkpoint D:/Weights/sam_vit_b_01ec64.pth \
   --sam-model-type vit_b \
   --device cuda \
+  --sam-fallback error \
   --include-global \
   --min-instance-area 64 \
   --max-instances 5
-~~~
+```
 
-Build the semantic/instance localization test manifest:
+```bash
+python tools/check_v5_data.py --manifest data/m3fd_train.jsonl
+```
 
-~~~bash
+#### Test set
+
+```bash
 python tools/build_m3fd_multigranularity.py \
   --split-root D:/Datasets/M3FD/test \
   --output data/m3fd_test_control.jsonl \
   --sam-checkpoint D:/Weights/sam_vit_b_01ec64.pth \
   --sam-model-type vit_b \
   --device cuda \
+  --sam-fallback error \
   --min-instance-area 64 \
   --max-instances 5
-~~~
 
-Create the global test manifest:
-
-~~~bash
 python tools/build_manifest.py \
   --visible-dir D:/Datasets/M3FD/test/Vis \
   --infrared-dir D:/Datasets/M3FD/test/Ir \
@@ -193,8 +218,85 @@ python tools/build_manifest.py \
   --instruction "Enhance the entire scene." \
   --negative-instruction "Suppress the entire scene." \
   --granularity global
-~~~
 
+python tools/check_v5_data.py --manifest data/m3fd_test_control.jsonl
+```
+
+M3FD XML boxes are converted into semantic and instance masks using SAM.
+`m3fd_test_global.jsonl` and `m3fd_test_control.jsonl` are evaluated separately.
+
+### RoadScene
+
+Expected layout: `RoadScene/{infrared,visible}`. Split the 221 aligned pairs
+into 171 training pairs and 50 test pairs:
+
+```bash
+python tools/split_roadscene.py \
+  --root D:/Datasets/RoadScene \
+  --train-count 171 \
+  --test-count 50 \
+  --seed 2026
+```
+
+Install SAM with the command given in the M3FD section. Grounding DINO is
+loaded automatically through Transformers.
+
+#### Training set
+
+```bash
+python tools/build_roadscene_multigranularity.py \
+  --split-root D:/Datasets/RoadScene/train \
+  --output data/roadscene_train.jsonl \
+  --detector-model IDEA-Research/grounding-dino-base \
+  --sam-checkpoint D:/Weights/sam_vit_b_01ec64.pth \
+  --sam-model-type vit_b \
+  --device cuda \
+  --detect-infrared \
+  --sam-fallback error \
+  --include-global \
+  --box-threshold 0.35 \
+  --text-threshold 0.25 \
+  --nms-iou 0.60 \
+  --min-instance-area 64 \
+  --max-instances 5
+```
+
+```bash
+python tools/check_v5_data.py --manifest data/roadscene_train.jsonl
+```
+
+#### Test set
+
+```bash
+python tools/build_roadscene_multigranularity.py \
+  --split-root D:/Datasets/RoadScene/test \
+  --output data/roadscene_test_control.jsonl \
+  --detector-model IDEA-Research/grounding-dino-base \
+  --sam-checkpoint D:/Weights/sam_vit_b_01ec64.pth \
+  --sam-model-type vit_b \
+  --device cuda \
+  --detect-infrared \
+  --sam-fallback error \
+  --box-threshold 0.35 \
+  --text-threshold 0.25 \
+  --nms-iou 0.60 \
+  --min-instance-area 64 \
+  --max-instances 5
+
+python tools/build_manifest.py \
+  --visible-dir D:/Datasets/RoadScene/test/visible \
+  --infrared-dir D:/Datasets/RoadScene/test/infrared \
+  --output data/roadscene_test_global.jsonl \
+  --instruction "Enhance the entire scene." \
+  --negative-instruction "Suppress the entire scene." \
+  --granularity global
+
+python tools/check_v5_data.py --manifest data/roadscene_test_control.jsonl
+```
+
+RoadScene has no annotations; Grounding DINO and SAM generate semantic/instance
+pseudo-labels. Global metrics use `roadscene_test_global.jsonl`, while control
+localization uses `roadscene_test_control.jsonl`.
 ## Training
 
 ### MSRS
