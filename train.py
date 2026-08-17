@@ -77,7 +77,7 @@ def validate(model, criterion, loader, device, thresholds=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="configs/controlfuse.yaml")
+    parser.add_argument("--config", default="configs/msrs.yaml")
     parser.add_argument("--resume")
     args = parser.parse_args()
     config = load_config(args.config)

@@ -28,7 +28,7 @@ def save_tensor(tensor: torch.Tensor, path: str, size):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="configs/controlfuse.yaml")
+    parser.add_argument("--config", default="configs/msrs.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--visible", required=True)
     parser.add_argument("--infrared", required=True)

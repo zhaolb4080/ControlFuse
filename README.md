@@ -356,14 +356,14 @@ python evaluate_localization.py \
 ControlFuse/
 ├── assets/                   # README teaser and framework figures
 ├── controlfuse/              # Model, data loader, losses, metrics, checkpoints
-├── configs/                  # Generic, MSRS, M3FD, and smoke-test configs
+├── configs/                  # MSRS, M3FD, and RoadScene configs
 ├── tools/                    # Dataset builders, validators, and profiling
 ├── tests/                    # Smoke, data, and loss-behavior tests
 ├── train.py                  # Training entry point
 ├── infer.py                  # Single-pair inference
 ├── infer_manifest.py         # Batch inference
 ├── evaluate.py               # Six fusion-quality metrics
-└──  evaluate_localization.py  # Semantic/instance localization metrics
+└── evaluate_localization.py  # Semantic/instance localization metrics
 ~~~
 
 ## Citation

@@ -45,9 +45,7 @@ class FrozenCLIPTextEncoder(nn.Module):
         except ImportError as exc:
             raise ImportError("Install `transformers` to use the CLIP text backend.") from exc
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        # Force the non-pickle checkpoint format. Recent Transformers versions
-        # intentionally refuse torch.load-based .bin weights on torch<2.6 due
-        # to CVE-2025-32434, while safetensors is safe and version-independent.
+
         self.encoder = CLIPTextModel.from_pretrained(model_name, use_safetensors=True)
         self.encoder.requires_grad_(False)
         self.output_dim = self.encoder.config.hidden_size

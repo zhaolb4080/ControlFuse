@@ -23,7 +23,7 @@ def main():
     args = parser.parse_args()
     config = load_config(args.config)
     if config.get("text", {}).get("backend") != "hash":
-        print("Tip: use configs/smoke.yaml for offline profiling without downloading CLIP.")
+        print("Tip: use configs/smoke.yaml for offline profiling without downloading BLIP.")
     model = build_model(config).eval()
     trainable = sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
     total = sum(parameter.numel() for parameter in model.parameters())

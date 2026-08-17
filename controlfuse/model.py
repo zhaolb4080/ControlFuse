@@ -116,15 +116,12 @@ class SparseFeatureManifoldConverter(nn.Module):
 
 
 def _laplacian_curvature(x: torch.Tensor) -> torch.Tensor:
-    # Second derivatives followed by squaring can overflow in fp16 even when
-    # the surrounding network is healthy. Curvature is a supervisory signal,
-    # so compute it explicitly in fp32 under AMP.
+
     x = x.float()
     kernel = x.new_tensor([[0.0, 1.0, 0.0], [1.0, -4.0, 1.0], [0.0, 1.0, 0.0]])
     kernel = kernel.view(1, 1, 3, 3).repeat(x.shape[1], 1, 1, 1)
     squared = F.conv2d(x, kernel, padding=1, groups=x.shape[1]).square().mean(1)
-    # sqrt has an infinite derivative at exactly zero. Flat MSRS regions often
-    # produce zero Laplacian, so stabilize the backward pass explicitly.
+
     return torch.sqrt(squared + 1e-6)
 
 
@@ -222,9 +219,7 @@ class MultiScaleDecoder(nn.Module):
     def __init__(self, dim: int, blocks: int, heads: int, out_channels: int = 3):
         super().__init__()
         branch_blocks = max(1, blocks // 3)
-        # Do not name a child module ``half``: nn.Module already defines
-        # half() for dtype conversion, so attribute lookup would resolve the
-        # bound method instead of this decoder branch.
+
         self.full_branch = nn.Sequential(*[RestormerBlock(dim, heads) for _ in range(branch_blocks)])
         self.half_branch = nn.Sequential(*[RestormerBlock(dim, heads) for _ in range(branch_blocks)])
         self.quarter_branch = nn.Sequential(*[RestormerBlock(dim, heads) for _ in range(branch_blocks)])

@@ -25,7 +25,7 @@ def save_image(tensor: torch.Tensor, path: Path, size, resample):
 
 def main():
     parser = argparse.ArgumentParser(description="Run ControlFuse on a JSONL manifest.")
-    parser.add_argument("--config", default="configs/controlfuse.yaml")
+    parser.add_argument("--config", default="configs/msrs.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--output-dir", required=True)
